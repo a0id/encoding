@@ -16,7 +16,7 @@ def index():
     return render_template('home.html')
 
 @app.route('/encode', methods=['GET', 'POST'])
-def encrypt():
+def encode():
     session['show_encoded'] = False
     form = BasicForm(request.form)
     if request.method == 'POST' and form.validate():
@@ -27,7 +27,6 @@ def encrypt():
         encoder = Encoder(zero, one)
         encoded_text = encoder.encode(text)
         
-        print(encoded_text)
         session['show_encoded'] = True
         return render_template('encode.html', encoded=encoded_text, form=form)
     
@@ -55,4 +54,4 @@ def decode():
 
 if __name__ == '__main__':
     app.secret_key = 'super secret key'
-    app.run(host= '0.0.0.0', debug=True)
+    app.run(host= '0.0.0.0', debug=False, port=80)
