@@ -4,4 +4,14 @@ class Decoder:
         self.one = one
 
     def decode(self, text):
-        return 'this is the DECODED text'
+        parsed_text = text.split(' ')
+
+        binary = ''
+        for key in parsed_text:
+            if key == self.zero:
+                binary += '0'
+            elif key == self.one:
+                binary += '1'
+
+        decoded = bytes(binary).encode('ascii')
+        return decoded
