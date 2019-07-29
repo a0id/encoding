@@ -1,3 +1,5 @@
+import binascii
+
 class Decoder:
     def __init__(self, zero, one):
         self.zero = zero
@@ -5,7 +7,7 @@ class Decoder:
 
     def decode(self, text):
         parsed_text = text.split(' ')
-
+    
         binary = ''
         for key in parsed_text:
             if key == self.zero:
@@ -13,5 +15,9 @@ class Decoder:
             elif key == self.one:
                 binary += '1'
 
-        decoded = bytes(binary).encode('ascii')
-        return decoded
+        n = int(binary, 2)
+        decoded = binascii.unhexlify('%x' % n)
+
+        clean_decoded = str(decoded)[2:][:-1]
+        
+        return clean_decoded
