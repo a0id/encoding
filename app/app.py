@@ -1,8 +1,5 @@
-from flask import Flask, render_template, flash, request, redirect, url_for, session, send_from_directory, logging
-
-app = Flask(__name__, static_url_path='/static')
-
-from wtforms import Form, StringField, TextAreaField, PasswordField, validators, FileField
+from flask import Flask, render_template, session, request
+from wtforms import Form, StringField, TextAreaField, validators
 
 from encoder import Encoder
 from decoder import Decoder
@@ -11,6 +8,8 @@ class BasicForm(Form):
     text = TextAreaField('', [validators.DataRequired()])
     zero = StringField('', [validators.DataRequired()])
     one = StringField('', [validators.DataRequired()])
+
+app = Flask(__name__, static_url_path='/static')
 
 @app.route('/')
 def index():
