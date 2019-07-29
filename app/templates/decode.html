@@ -1,28 +1,39 @@
 {% extends "layout.html" %}
 
 {% block body %}
-  <h1 class="text-center" style="margin-bottom:1.5%">Decrypt</h1>
-  <div class="container">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Upload Image</h5>
-        <form method=post enctype=multipart/form-data action="">
-          <input type=file id="choose_file" name=file><hr>
-          <button class="btn btn-primary" type="submit">Decrypt</button>
-        </form>
-        {% if session['filename']!="" %}
-          <p class="card-text" style="margin-top:1%">Image:</p>
-          <img src="{{ url_for('static', filename='uploads/' + session['filename']) }}" />
-        {% endif %}
-      </div>
-    </div>
-  </div>
-  {% if session['filename']!="" %}
+
+    {% from "includes/_formhelpers.html" import render_field %}
+    <h1 class="text-center">Decode</h1>
     <div class="container">
-      <div class="form-group">
-        <h5 style="margin-top: 1.5%">Decrypted Text</h5>
-        <textarea class="form-control big" disabled>{{ text }}</textarea>
-      </div>
+
+        <form action="" method="POST">
+            <div class="form-group">
+                <h5 style="margin-top: 1.5%">Input Text</h5>
+                {{ render_field(form.text, class_="form-control big") }}
+                
+                <h5 style="margin-top: 1.5%">Value for Binary-0</h5>
+                {{ render_field(form.zero, class_="form-control nice") }}
+
+                <h5 style="margin-top: 1.5%">Value for Binary-1</h5>
+                {{ render_field(form.one, class_="form-control nice") }}
+            </div>
+            <button type="submut" name="button" class="btn btn-primary">Decode</button>
+        </form>
+    
     </div>
-  {% endif %}
+
+    {% if session['show_decoded'] == True %}
+        <hr>
+        <div class="container">
+            <div class="card">
+
+                <div class="card-body">
+                    <h5 class="card-title">Decoded Text</h5>
+                    <p class="card-text" style="margin-top:1%">{{ decoded }}</p>
+                </div>
+
+            </div>
+        </div>
+    {% endif %}
+
 {% endblock %}

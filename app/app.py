@@ -7,7 +7,7 @@ from wtforms import Form, StringField, TextAreaField, PasswordField, validators,
 from encoder import Encoder
 from decoder import Decoder
 
-class EncryptForm(Form):
+class BasicForm(Form):
     text = TextAreaField('', [validators.DataRequired()])
     zero = StringField('', [validators.DataRequired()])
     one = StringField('', [validators.DataRequired()])
@@ -18,7 +18,8 @@ def index():
 
 @app.route('/encode', methods=['GET', 'POST'])
 def encrypt():
-    form = EncryptForm(request.form)
+    session['show_encoded'] = False
+    form = BasicForm(request.form)
     if request.method == 'POST' and form.validate():
         text = form.text.data
         zero = form.zero.data
@@ -31,36 +32,27 @@ def encrypt():
         session['show_encoded'] = True
         return render_template('encode.html', encoded=encoded_text, form=form)
     
-    session['show_encoded'] = None
+    session['show_encoded'] = False
     return render_template('encode.html', form=form)
 
 @app.route('/decode', methods=['GET', 'POST'])
-def upload_file():
-    session['filename'] = ''
-    if request.method == 'POST':
-        # check if the post `request has the file part
-        if 'file' not in request.files :
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit a empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            PATH = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(PATH)
-            session['filename'] = filename
-            text = ''
-            with open(Decrypt(PATH).NAME, 'r') as f:
-                text = f.read()
-            print(text)
-            return render_template('decode.html', text=text)
-    else:
-        session['filename'] = ''
-    return render_template('decode.html')
+def decode():
+    session['show_decoded'] = False
+    form = BasicForm(request.form)
+
+    if request.method == 'POST' and form.validate():
+        text = form.text.data
+        zero = form.zero.data
+        one = form.one.data
+
+        decoder = Decoder(zero, one)
+        decoded_text = decoder.decode(text)
+        
+        session['show_decoded'] = True
+        return render_template('decode.html', decoded=decoded_text, form=form)
+
+    session['show_decoded'] = False
+    return render_template('decode.html', form=form)
 
 if __name__ == '__main__':
     app.secret_key = 'super secret key'
