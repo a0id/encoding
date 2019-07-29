@@ -1,27 +1,39 @@
 {% extends "layout.html" %}
 
 {% block body %}
-  {% from "includes/_formhelpers.html" import render_field %}
-  <h1 class="text-center">Encode</h1>
-  <div class="container">
-    <form action="" method="POST">
-      <div class="form-group">
-        <h5 style="margin-top: 1.5%">Input Text</h5>
-        {{ render_field(form.text, class_="form-control big") }}
-      </div>
-      <button type="submut" name="button" class="btn btn-primary">Encrypt</button>
-    </form>
-  </div>
-  {% if session['filename']!="" %}
-  <div class="container">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Encoded Text</h5>
-        <img src="{{ url_for('static', filename='encrypted/' + session['filename']+'.png') }}" />
-        <p class="card-text" style="margin-top:1%">If you did not input a lot of text, the image will be very small. If it is too small to see, click the download button.</p>
-        <a href="static/encrypted/{{ session['filename'] + '.png' }}" target="_blank" class="btn btn-primary">Download</a>
-      </div>
+
+    {% from "includes/_formhelpers.html" import render_field %}
+    <h1 class="text-center">Encode</h1>
+    <div class="container">
+
+        <form action="" method="POST">
+            <div class="form-group">
+                <h5 style="margin-top: 1.5%">Input Text</h5>
+                {{ render_field(form.text, class_="form-control big") }}
+                
+                <h5 style="margin-top: 1.5%">Value for Binary-0</h5>
+                {{ render_field(form.zero, class_="form-control nice") }}
+
+                <h5 style="margin-top: 1.5%">Value for Binary-1</h5>
+                {{ render_field(form.one, class_="form-control nice") }}
+            </div>
+            <button type="submut" name="button" class="btn btn-primary">Encode</button>
+        </form>
+    
     </div>
-  </div>
-  {% endif %}
+
+    {% if session['show_encoded'] == True %}
+        <hr>
+        <div class="container">
+            <div class="card">
+
+                <div class="card-body">
+                    <h5 class="card-title">Encoded Text</h5>
+                    <p class="card-text" style="margin-top:1%">{{ encoded }}</p>
+                </div>
+
+            </div>
+        </div>
+    {% endif %}
+
 {% endblock %}
