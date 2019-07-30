@@ -1,5 +1,6 @@
 from flask import Flask, render_template, session, request
 from wtforms import Form, StringField, TextAreaField, validators
+import sys
 
 from encoder import Encoder
 from decoder import Decoder
@@ -52,6 +53,23 @@ def decode():
     session['show_decoded'] = False
     return render_template('decode.html', form=form)
 
+def syntax():
+    print('flags:')
+    print('  --production, -p\n    Start a production server')
+    print('  --development, -d\n    Start a development server')
+        
 if __name__ == '__main__':
     app.secret_key = 'super secret key'
-    app.run(host= '0.0.0.0', debug=False, port=80)
+    
+    if len(sys.argv) != 2:
+        syntax()
+        sys.exit(-1)
+    
+    if sys.argv[1] == '--production' or sys.argv[1] == '-p':
+        app.run(host= '0.0.0.0', debug=False, port=80)
+    
+    elif sys.argv[1] == '--development' or sys.argv[1] == '-d':
+        app.run(host= '0.0.0.0', debug=True, port=8080)
+
+    else:
+        syntax()

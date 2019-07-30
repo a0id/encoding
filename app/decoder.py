@@ -15,6 +15,8 @@ class Decoder:
                     binary += '0'
                 elif key == self.one:
                     binary += '1'
+                elif key == '\n':
+                    continue
             
             n = int(binary, 2)
             decoded = binascii.unhexlify('%x' % n)
